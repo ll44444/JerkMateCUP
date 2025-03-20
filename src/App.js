@@ -27,11 +27,11 @@ const SchiumaParty = () => {
       nickname: "Weelchair King",
       archetipo: "Indomable",
       stats: {
-        velocità: 9,
-        precisione: 7,
+        velocità: 8,
+        precisione: 10,
         resistenza: 9,
-        potenza: 9,
-        stamina: 9,
+        potenza: 7,
+        stamina: 6, 
         carisma: 5
       },
       ability: "Liquid - Aumenta la velocità di caricamento del 40% per 5 secondi",
@@ -414,15 +414,19 @@ const SchiumaParty = () => {
 
   // Funzione per aggiornare il livello di schiuma
   const updateFoamLevel = (characterName, rate) => {
+    // Prima controlla se esiste già un vincitore, se c'è non fare nulla
+    if (winner) return;
+    
     setFoamLevels(prevLevels => {
       const prevLevel = prevLevels[characterName] || 0;
-
+  
+      // Se abbiamo già raggiunto 100%, non aggiornare ulteriormente
       if (prevLevel >= 100) {
         return prevLevels;
       }
-
+  
       const newLevel = Math.min(prevLevel + rate, 100);
-
+  
       // Aggiorna i dati per il grafico ogni 10 secondi di gioco
       if (Math.floor(time) % 10 === 0) {
         setFoamDataMap(prevDataMap => ({
@@ -433,13 +437,15 @@ const SchiumaParty = () => {
           ]
         }));
       }
-
-      // Se raggiungiamo il 100% e non c'è ancora un vincitore, imposta questo personaggio come vincitore
-      if (newLevel >= 100 && !winner) {
+  
+      // Se raggiungiamo il 100%, imposta questo personaggio come vincitore e ferma tutto immediatamente
+      if (newLevel >= 100) {
+        // Imposta il vincitore
         setWinner(characterName);
+        // Ferma tutto il gioco immediatamente
         endGame();
       }
-
+  
       return {
         ...prevLevels,
         [characterName]: newLevel
