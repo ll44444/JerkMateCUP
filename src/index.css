@@ -1,0 +1,462 @@
+/*JerkmateCup_v1.0.0*/
+
+/* Main Layout Styles */
+.w-full {
+  width: 100%;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Typography */
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.font-arial{
+font-family:"Arial", Gadget, Arial, sans-serif;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Character Cards */
+.p-4 {
+  padding: 1rem;
+}
+
+.border {
+  border-width: 1px;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.border-blue-500 {
+  border-color: #3b82f6;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.hover\:bg-blue-50:hover {
+  background-color: #eff6ff;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+/* Improved Hexagon Chart */
+.stats-hexagon {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Fix for hexagon labels */
+.stats-hexagon text {
+  font-weight: 600;
+  fill: #000000;
+  font-size: 6px !important;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7), -1px -1px 1px rgba(255, 255, 255, 0.7), 
+               1px -1px 1px rgba(255, 255, 255, 0.7), -1px 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+/* Hexagon grid and stats polygon */
+.stats-hexagon polygon[fill="none"] {
+  stroke: #cccccc;
+  stroke-width: 0.75px;
+}
+
+.stats-hexagon polygon[fill="rgba(0, 123, 255, 0.5)"] {
+  fill: rgba(0, 123, 255, 0.4);
+  stroke: #2563eb;
+  stroke-width: 2px;
+}
+
+/* Hexagon points */
+.stats-hexagon circle {
+  fill: #0056b3;
+  r: 4px;
+  stroke: white;
+  stroke-width: 1px;
+}
+
+/* Hexagon value indicators */
+.stats-hexagon .value-label {
+  font-size: 8px;
+  fill: #4b5563;
+}
+
+/* Info Box */
+.bg-yellow-100 {
+  background-color: #fef3c7;
+}
+
+.border-l-4 {
+  border-left-width: 4px;
+}
+
+.border-yellow-500 {
+  border-color: #f59e0b;
+}
+
+.list-disc {
+  list-style-type: disc;
+}
+
+.pl-5 {
+  padding-left: 1.25rem;
+}
+
+/* Form Elements */
+select {
+  appearance: none;
+  background-color: #fff;
+  border-color: #d1d5db;
+  border-width: 1px;
+  border-radius: 0.375rem;
+  padding-top: 0.5rem;
+  padding-right: 2.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  color: #111827;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6;
+}
+
+.bg-green-500 {
+  background-color: #00b357;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.hover\:bg-blue-600:hover {
+  background-color: #2563eb;
+}
+
+.bg-gray-500 {
+  background-color: #6b7280;
+}
+
+.hover\:bg-gray-600:hover {
+  background-color: #4b5563;
+}
+
+/* Game Elements */
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+/* Progress Bar */
+.h-8 {
+  height: 2rem;
+}
+
+.bg-gray-200 {
+  background-color: #e5e7eb;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.duration-500 {
+  transition-duration: 500ms;
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Chart */
+.h-64 {
+  height: 16rem;
+}
+
+/* Event Logging */
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.max-h-64 {
+  max-height: 16rem;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+/* Fix for dynamic color classes */
+/* Event base styles */
+[class^="bg-"][class*="-50"],
+[class^="bg-"][class*="-100"] {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+[class^="text-"][class*="-600"],
+[class^="text-"][class*="-700"] {
+  font-weight: 600;
+}
+
+/* Green */
+.bg-green-50 { background-color: #ecfdf5; }
+.bg-green-100 { background-color: #d1fae5; }
+.border-green-400 { border-color: #34d399; }
+.border-green-500 { border-color: #10b981; }
+.text-green-600 { color: #059669; }
+.text-green-700 { color: #047857; }
+
+/* Red */
+.bg-red-50 { background-color: #fef2f2; }
+.bg-red-100 { background-color: #fee2e2; }
+.border-red-400 { border-color: #f87171; }
+.border-red-500 { border-color: #ef4444; }
+.text-red-600 { color: #dc2626; }
+.text-red-700 { color: #b91c1c; }
+
+/* Blue */
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-blue-100 { background-color: #dbeafe; }
+.border-blue-400 { border-color: #60a5fa; }
+.border-blue-500 { border-color: #3b82f6; }
+.text-blue-600 { color: #2563eb; }
+.text-blue-700 { color: #1d4ed8; }
+
+/* Orange */
+.bg-orange-50 { background-color: #fff7ed; }
+.bg-orange-100 { background-color: #ffedd5; }
+.border-orange-400 { border-color: #fb923c; }
+.border-orange-500 { border-color: #f97316; }
+.text-orange-600 { color: #ea580c; }
+.text-orange-700 { color: #c2410c; }
+
+/* Purple */
+.bg-purple-50 { background-color: #faf5ff; }
+.bg-purple-100 { background-color: #f3e8ff; }
+.border-purple-400 { border-color: #c084fc; }
+.border-purple-500 { border-color: #a855f7; }
+.text-purple-600 { color: #9333ea; }
+.text-purple-700 { color: #7e22ce; }
+
+/* Teal */
+.bg-teal-50 { background-color: #f0fdfa; }
+.bg-teal-100 { background-color: #ccfbf1; }
+.border-teal-400 { border-color: #2dd4bf; }
+.border-teal-500 { border-color: #14b8a6; }
+.text-teal-600 { color: #0d9488; }
+.text-teal-700 { color: #0f766e; }
+
+/* Gray */
+.bg-gray-50 { background-color: #f9fafb; }
+.border-gray-400 { border-color: #9ca3af; }
+.border-gray-500 { border-color: #6b7280; }
+.text-gray-600 { color: #4b5563; }
+.text-gray-700 { color: #374151; }
+
+/* Cyan */
+.bg-cyan-50 { background-color: #ecfeff; }
+.bg-cyan-100 { background-color: #cffafe; }
+.border-cyan-400 { border-color: #22d3ee; }
+.border-cyan-500 { border-color: #06b6d4; }
+.text-cyan-600 { color: #0891b2; }
+.text-cyan-700 { color: #0e7490; }
+
+/* Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
