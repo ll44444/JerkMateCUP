@@ -17,36 +17,22 @@ const SchiumaParty = () => {
   const foamTimerRef = useRef(null);
   const gameTimerRef = useRef(null);
   const eventTimerRef = useRef(null);
+  const hasWinnerRef = useRef(false);
 
   const totalGameTime = 30 * 60; // 30 minuti in secondi
   const eventInterval = 3 * 60; // 3 minuti in secondi
 
   const characters = [
     {
-      name: "Marco Talento",
-      nickname: "Deu Sex",
-      archetipo: "Dio",
-      stats: {
-        velocità: 10,
-        precisione: 10,
-        resistenza: 10,
-        potenza: 10,
-        stamina: 10,
-        fortuna: 10
-      },
-      ability: "??? - Aumenta tutte le stat",
-      loadRate: 0.10 // Tasso rallentato per durare 30 minuti
-    },
-    {
       name: "Andrea",
-      nickname: "Legless King",
+      nickname: "Weelchair King",
       archetipo: "Indomable",
       stats: {
         velocità: 8,
         precisione: 10,
         resistenza: 9,
-        potenza: 9,
-        stamina: 9,
+        potenza: 7,
+        stamina: 6, 
         carisma: 5
       },
       ability: "Liquid - Aumenta la velocità di caricamento del 40% per 5 secondi",
@@ -62,7 +48,7 @@ const SchiumaParty = () => {
         resistenza: 10,
         potenza: 7,
         stamina: 5,
-        fortuna: 8
+        carisma: 8
       },
       ability: "Analisi Perfetta - Riduce la possibilità di errori del 70% per 8 secondi",
       loadRate: 0.055
@@ -77,7 +63,7 @@ const SchiumaParty = () => {
         resistenza: 9,
         potenza: 10,
         stamina: 3,
-        fortuna: 6
+        carisma: 6
       },
       ability: "Schiuma Esplosiva - Carica la barra di un immediato 15%",
       loadRate: 0.058
@@ -92,25 +78,25 @@ const SchiumaParty = () => {
         resistenza: 7,
         potenza: 7,
         stamina: 7,
-        fortuna: 7
+        carisma: 7
       },
       ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
       loadRate: 0.059
     },
     {
-      name: "Test1",
+      name: "marco",
       nickname: "Il Tecnico",
       archetipo: "Tecnico",
       stats: {
-        velocità: 6,
+        velocità: 10,
         precisione: 10,
-        resistenza: 7,
-        potenza: 5,
-        stamina: 9,
-        fortuna: 3
+        resistenza: 10,
+        potenza: 10,
+        stamina: 10,
+        carisma: 10
       },
       ability: "Ottimizzazione - Aumenta l'efficienza del 25% per 12 secondi",
-      loadRate: 0.057
+      loadRate: 0.5
     }
   ];
 
@@ -429,10 +415,12 @@ const SchiumaParty = () => {
 
   // Funzione per aggiornare il livello di schiuma
   const updateFoamLevel = (characterName, rate) => {
+    // Controlla il ref sincrono invece dello stato asincrono
+    if (hasWinnerRef.current) return;
+    
     setFoamLevels(prevLevels => {
       const prevLevel = prevLevels[characterName] || 0;
   
-      // Se abbiamo già raggiunto 100%, non aggiornare ulteriormente
       if (prevLevel >= 100) {
         return prevLevels;
       }
@@ -440,19 +428,33 @@ const SchiumaParty = () => {
       const newLevel = Math.min(prevLevel + rate, 100);
   
       // Aggiorna i dati per il grafico ogni 10 secondi di gioco
-      if (Math.floor(time) % 10 === 0) {
-        setFoamDataMap(prevDataMap => ({
-          ...prevDataMap,
-          [characterName]: [
-            ...(prevDataMap[characterName] || []),
-            { time: time / 60, foam: newLevel }
-          ]
-        }));
-      }
+      //if (Math.floor(time) % 10 === 0) {
+        setFoamDataMap(prevDataMap => {
+          const timeInMinutes = time / 60;
+          // Aggiungiamo due punti allo stesso timestamp per creare un salto verticale
+          return {
+            ...prevDataMap,
+            [characterName]: [
+              ...(prevDataMap[characterName] || []),
+              // Primo punto alla stessa altezza dell'ultimo punto (se esiste)
+              { 
+                time: timeInMinutes, 
+                foam: prevDataMap[characterName]?.length > 0 
+                  ? prevDataMap[characterName][prevDataMap[characterName].length - 1].foam 
+                  : 0 
+              },
+              // Secondo punto con il nuovo valore
+              { time: timeInMinutes, foam: newLevel }
+            ]
+          };
+        });
+      //}
   
       // Se raggiungiamo il 100%, imposta questo personaggio come vincitore e ferma tutto immediatamente
       if (newLevel >= 100) {
-        // Imposta il vincitore
+        // Imposta il ref sincrono immediatamente
+        hasWinnerRef.current = true;
+        // Imposta lo stato del vincitore (asincrono)
         setWinner(characterName);
         // Ferma tutto il gioco immediatamente
         endGame();
@@ -518,7 +520,6 @@ const SchiumaParty = () => {
 
   // Funzione per terminare il gioco
   const endGame = () => {
-    // Ferma il timer principale del gioco
     clearInterval(gameTimerRef.current);
 
     // Pulisci tutti i timer dei personaggi
@@ -541,6 +542,7 @@ const SchiumaParty = () => {
     setEvents([]);
     setCurrentEvent(null);
     setWinner(null);
+    hasWinnerRef.current = false; // Resetta il ref
   };
 
   // Funzione per selezionare un personaggio
@@ -598,13 +600,13 @@ const SchiumaParty = () => {
                 onClick={() => selectCharacter(character.name)}
               >
                 <h3 className="text-lg font-semibold font-arial">{character.name} - "{character.nickname}"</h3>
-                <p className="text-sm text-gray-600 mb-2 align-right">{character.archetipo}</p>
+                <p className="text-sm text-gray-600 mb-2">{character.archetipo}</p>
 
                 {renderHexagonChart(character.stats)}
 
                 <div className="mt-4">
                   <p className="text-sm font-semibold font-arial">Abilità Speciale:</p>
-                  <p className="text-sm italic">{character.ability}</p>
+                  <p className="text-sm">{character.ability}</p>
                 </div>
               </div>
             ))}
@@ -697,15 +699,16 @@ const SchiumaParty = () => {
 
                 {selectedCharacters.map((characterName, index) => (
                   <Line
-                    key={characterName}
-                    type="monotone"
-                    data={foamDataMap[characterName] || []}
-                    dataKey="foam"
-                    name={characterName}
-                    stroke={index === 0 ? "#0056b3" : "#00b358"}
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={false}
+                  key={characterName}
+                  type="stepAfter"  // Cambia da "monotone" a "stepAfter"
+                  data={foamDataMap[characterName] || []}
+                  dataKey="foam"
+                  name={characterName}
+                  stroke={index === 0 ? "#0056b3" : "#00b358"}
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                
                   />
                 ))}
               </LineChart>
