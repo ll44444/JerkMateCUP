@@ -23,8 +23,23 @@ const SchiumaParty = () => {
 
   const characters = [
     {
+      name: "Marco Talento",
+      nickname: "Deu Sex",
+      archetipo: "Dio",
+      stats: {
+        velocità: 10,
+        precisione: 10,
+        resistenza: 10,
+        potenza: 10,
+        stamina: 10,
+        fortuna: 10
+      },
+      ability: "??? - Aumenta tutte le stat",
+      loadRate: 0.10 // Tasso rallentato per durare 30 minuti
+    },
+    {
       name: "Andrea",
-      nickname: "Weelchair King",
+      nickname: "Legless King",
       archetipo: "Indomable",
       stats: {
         velocità: 9,
@@ -32,7 +47,7 @@ const SchiumaParty = () => {
         resistenza: 9,
         potenza: 9,
         stamina: 9,
-        carisma: 5
+        fortuna: 4
       },
       ability: "Liquid - Aumenta la velocità di caricamento del 40% per 5 secondi",
       loadRate: 0.06 // Tasso rallentato per durare 30 minuti
@@ -47,7 +62,7 @@ const SchiumaParty = () => {
         resistenza: 10,
         potenza: 7,
         stamina: 5,
-        carisma: 8
+        fortuna: 8
       },
       ability: "Analisi Perfetta - Riduce la possibilità di errori del 70% per 8 secondi",
       loadRate: 0.055
@@ -62,7 +77,7 @@ const SchiumaParty = () => {
         resistenza: 9,
         potenza: 10,
         stamina: 3,
-        carisma: 6
+        fortuna: 6
       },
       ability: "Schiuma Esplosiva - Carica la barra di un immediato 15%",
       loadRate: 0.058
@@ -77,13 +92,13 @@ const SchiumaParty = () => {
         resistenza: 7,
         potenza: 7,
         stamina: 7,
-        carisma: 7
+        fortuna: 7
       },
       ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
       loadRate: 0.059
     },
     {
-      name: "Luca",
+      name: "Test1",
       nickname: "Il Tecnico",
       archetipo: "Tecnico",
       stats: {
@@ -92,7 +107,7 @@ const SchiumaParty = () => {
         resistenza: 7,
         potenza: 5,
         stamina: 9,
-        carisma: 3
+        fortuna: 3
       },
       ability: "Ottimizzazione - Aumenta l'efficienza del 25% per 12 secondi",
       loadRate: 0.057
@@ -414,6 +429,10 @@ const SchiumaParty = () => {
 
   // Funzione per aggiornare il livello di schiuma
   const updateFoamLevel = (characterName, rate) => {
+
+    // Verifica se esiste già un vincitore, in tal caso non aggiornare nulla
+    if (winner) return;
+
     setFoamLevels(prevLevels => {
       const prevLevel = prevLevels[characterName] || 0;
 
@@ -500,6 +519,7 @@ const SchiumaParty = () => {
 
   // Funzione per terminare il gioco
   const endGame = () => {
+    // Ferma il timer principale del gioco
     clearInterval(gameTimerRef.current);
 
     // Pulisci tutti i timer dei personaggi
@@ -579,13 +599,13 @@ const SchiumaParty = () => {
                 onClick={() => selectCharacter(character.name)}
               >
                 <h3 className="text-lg font-semibold font-arial">{character.name} - "{character.nickname}"</h3>
-                <p className="text-sm text-gray-600 mb-2">{character.archetipo}</p>
+                <p className="text-sm text-gray-600 mb-2 align-right">{character.archetipo}</p>
 
                 {renderHexagonChart(character.stats)}
 
                 <div className="mt-4">
                   <p className="text-sm font-semibold font-arial">Abilità Speciale:</p>
-                  <p className="text-sm">{character.ability}</p>
+                  <p className="text-sm italic">{character.ability}</p>
                 </div>
               </div>
             ))}
