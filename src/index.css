@@ -343,6 +343,95 @@ button {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
+.foam-bar {
+  width: 100%;
+  height: 2rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.foam-fill {
+  height: 100%;
+  transition: width 0.5s ease-out;
+  border-radius: 9999px;
+  transform-origin: left;
+}
+
+.foam-fill.stroking {
+  animation: stroke-pulse 0.5s ease-out;
+}
+
+.stamina-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.stamina-player-container {
+  flex: 1;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stamina-bar {
+  width: 100%;
+  height: 1.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stamina-fill {
+  height: 100%;
+  background-color: #10B981;
+  transition: width 500ms ease-out;
+  border-radius: 9999px;
+}
+
+.stamina-fill.recharging {
+  background-color: #6366F1;
+  background-image: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 50px 50px;
+  animation: recharge-animation 1s linear infinite;
+}
+
+.stamina-fill.low {
+  background-color: #EF4444;
+}
+
+.recharging-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+
+.recharging-text::after {
+  content: '';
+  display: inline-block;
+  animation: dots 1.5s infinite;
+}
+
 /* Chart */
 .h-64 {
   height: 16rem;
@@ -458,6 +547,35 @@ button {
   50% {
     opacity: 0.7;
   }
+}
+
+@keyframes stroke-pulse {
+  0% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.2);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes recharge-animation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+@keyframes dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+  100% { content: ''; }
 }
 
 .animate-pulse {

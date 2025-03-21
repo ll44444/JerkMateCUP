@@ -1,4 +1,4 @@
-//JerkmateCup_v1.0.0
+//JerkmateCup_v1.0.1 - stamina bar added
 
 import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -13,6 +13,10 @@ const SchiumaParty = () => {
   const [currentEvent, setCurrentEvent] = useState(null);
   const [gameSpeed, setGameSpeed] = useState(1); // Per la demo, accelleriamo il gioco
   const [winner, setWinner] = useState(null);
+  const [staminaLevels, setStaminaLevels] = useState({});
+  const [isRecharging, setIsRecharging] = useState({});
+  const [strokeTimers, setStrokeTimers] = useState({});
+  const [isStroking, setIsStroking] = useState({});
 
   const foamTimerRef = useRef(null);
   const gameTimerRef = useRef(null);
@@ -25,108 +29,168 @@ const SchiumaParty = () => {
   const characters = [
     {
       name: "Andrea",
-      nickname: "Weelchair King",
+      nickname: "Legless King",
       archetipo: "Indomable",
       stats: {
-        velocità: 8,
+        velocità: 9,
         precisione: 10,
-        resistenza: 9,
-        potenza: 7,
-        stamina: 6, 
-        carisma: 5
+        tecnica: 9,
+        potenza: 8,
+        stamina: 7,
+        fortuna: 2
       },
       ability: "Liquid - Aumenta la velocità di caricamento del 40% per 5 secondi",
       loadRate: 0.06 // Tasso rallentato per durare 30 minuti
     },
     {
       name: "Luca",
-      nickname: "Luca",
+      nickname: "La Bestia",
       archetipo: "Bear",
       stats: {
-        velocità: 5,
+        velocità: 4,
         precisione: 6,
-        resistenza: 10,
-        potenza: 7,
+        tecnica: 3,
+        potenza: 10,
         stamina: 5,
-        carisma: 8
+        fortuna: 9
       },
       ability: "Analisi Perfetta - Riduce la possibilità di errori del 70% per 8 secondi",
       loadRate: 0.055
     },
     {
-      name: "Bruno",
-      nickname: "Il Potente",
-      archetipo: "Forzuto",
+      name: "Tunillo",
+      nickname: "AI",
+      archetipo: "Engineer",
       stats: {
-        velocità: 4,
-        precisione: 5,
-        resistenza: 9,
-        potenza: 10,
-        stamina: 3,
-        carisma: 6
+        velocità: 6,
+        precisione: 7,
+        tecnica: 10,
+        potenza: 3,
+        stamina: 5,
+        fortuna: 5
       },
       ability: "Schiuma Esplosiva - Carica la barra di un immediato 15%",
       loadRate: 0.058
     },
     {
-      name: "Giulia",
-      nickname: "L'Equilibrista",
-      archetipo: "Bilanciato",
+      name: "Antonio",
+      nickname: "Il Filosofo",
+      archetipo: "Glasscannon",
       stats: {
-        velocità: 7,
-        precisione: 7,
-        resistenza: 7,
-        potenza: 7,
-        stamina: 7,
-        carisma: 7
+        velocità: 6,
+        precisione: 8,
+        tecnica: 7,
+        potenza: 5,
+        stamina: 8,
+        fortuna: 6
       },
       ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
       loadRate: 0.059
     },
     {
-      name: "marco",
-      nickname: "Il Tecnico",
-      archetipo: "Tecnico",
+      name: "Ernesto",
+      nickname: "L'Erede di dio",
+      archetipo: "Caos",
+      stats: {
+        velocità: 8,
+        precisione: 9,
+        tecnica: 9,
+        potenza: 9,
+        stamina: 2,
+        fortuna: 6
+      },
+      ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
+      loadRate: 0.059
+    },
+    {
+      name: "Simone S.",
+      nickname: "Il Professore",
+      archetipo: "Trickster",
+      stats: {
+        velocità: 6,
+        precisione: 8,
+        tecnica: 7,
+        potenza: 6,
+        stamina: 4,
+        fortuna: 7
+      },
+      ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
+      loadRate: 0.059
+    },
+    {
+      name: "Simone M.",
+      nickname: "L'Artista",
+      archetipo: "Cumslinger",
+      stats: {
+        velocità: 8,
+        precisione: 9,
+        tecnica: 9,
+        potenza: 3,
+        stamina: 2,
+        fortuna: 4
+      },
+      ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
+      loadRate: 0.059
+    },
+    {
+      name: "Salvatore",
+      nickname: "Il Lampo",
+      archetipo: "Speedster",
+      stats: {
+        velocità: 8,
+        precisione: 9,
+        tecnica: 9,
+        potenza: 3,
+        stamina: 3,
+        fortuna: 4
+      },
+      ability: "Armonia Perfetta - Rende tutte le statistiche 8/10 per 10 secondi",
+      loadRate: 0.059
+    },
+    {
+      name: "Marco",
+      nickname: "dio",
+      archetipo: "winner",
       stats: {
         velocità: 10,
         precisione: 10,
-        resistenza: 10,
+        tecnica: 10,
         potenza: 10,
         stamina: 10,
-        carisma: 10
+        fortuna: 10
       },
       ability: "Ottimizzazione - Aumenta l'efficienza del 25% per 12 secondi",
-      loadRate: 0.5
+      loadRate: 0.8
     }
   ];
 
   // Array di possibili eventi casuali
   const possibleEvents = [
     {
-      name: "Schiumata Potente!",
-      description: "Una improvvisa schiumata potenzia il tuo progresso!",
+      name: "Palle pulsanti!",
+      description: "Un'improvvisa potenza ti fa pulsare le palle, aumentando il tuo progresso!",
       effect: "increase",
       value: 5,
       color: "green"
     },
     {
-      name: "Perdita di Pressione",
-      description: "La pressione cala improvvisamente rallentando il processo",
+      name: "Pene afflosciato",
+      description: "La pressione cala improvvisamente ammorbidendo il tuo pene, rallenta il progresso",
       effect: "slowdown",
       value: 0.5, // moltiplica per 0.5 la velocità
       duration: 60, // 60 secondi
       color: "orange"
     },
     {
-      name: "Sovraccarico Schiumoso",
-      description: "Troppa schiuma! Parte del progresso va perso",
+      name: "Frenulo infiammato",
+      description: "Troppa schiuma sul pesce! Parte del progresso va perso",
       effect: "decrease",
       value: 3,
       color: "red"
     },
     {
-      name: "Turbo Schiuma",
-      description: "La tua schiuma accelera improvvisamente!",
+      name: "Velocità Massiva",
+      description: "Lo stroking accelera improvvisamente!",
       effect: "speedup",
       value: 2, // moltiplica per 2 la velocità
       duration: 45, // 45 secondi
@@ -140,22 +204,22 @@ const SchiumaParty = () => {
       color: "purple"
     },
     {
-      name: "Ricetta Segreta",
-      description: "Hai scoperto un ingrediente segreto! Guadagni molto progresso",
+      name: "MARCO TI DA UNA MANO!",
+      description: "MARCO TALENTO TI METTE UNA MANO SUL PESCE! Guadagni molto progresso",
       effect: "increase",
       value: 10,
       color: "teal"
     },
     {
       name: "Intasamento",
-      description: "Il sistema si è intasato e non avanza",
+      description: "Un grumo di sborra blocca le palle, rallentando il processo",
       effect: "pause",
       duration: 30, // 30 secondi
       color: "gray"
     },
     {
       name: "Manutenzione Rapida",
-      description: "Una rapida sistemata al meccanismo migliora l'efficienza",
+      description: "Una rapida sistemata al pisello migliora l'efficienza",
       effect: "speedup",
       value: 1.5,
       duration: 90,
@@ -244,6 +308,7 @@ const SchiumaParty = () => {
             // Aggiungiamo un piccolo sfondo bianco per migliorare la leggibilità del testo
             return (
               <g key={`label-${i}`}>
+
                 <text
                   x={x}
                   y={y}
@@ -413,59 +478,97 @@ const SchiumaParty = () => {
     });
   };
 
-  // Funzione per aggiornare il livello di schiuma
-  const updateFoamLevel = (characterName, rate) => {
-    // Controlla il ref sincrono invece dello stato asincrono
-    if (hasWinnerRef.current) return;
-    
-    setFoamLevels(prevLevels => {
-      const prevLevel = prevLevels[characterName] || 0;
-  
-      if (prevLevel >= 100) {
-        return prevLevels;
+  // Modifica anche startStaminaRecharge per riavviare il timer solo dopo la ricarica
+const startStaminaRecharge = (characterName) => {
+  const character = characters.find(c => c.name === characterName);
+  if (!character) return;
+
+  // Ferma il timer della foam durante la ricarica
+  if (foamTimerRef.current[characterName]) {
+    clearInterval(foamTimerRef.current[characterName]);
+    foamTimerRef.current[characterName] = null;
+  }
+
+  setIsRecharging(prev => ({ ...prev, [characterName]: true }));
+
+  const rechargeTime = 10000 * (1 - (character.stats.stamina / 12));
+  const targetStamina = character.stats.stamina * 10;
+
+  setTimeout(() => {
+    setStaminaLevels(prev => ({ 
+      ...prev, 
+      [characterName]: targetStamina 
+    }));
+    setIsRecharging(prev => ({ ...prev, [characterName]: false }));
+
+    // Riavvia il timer della foam SOLO dopo che la ricarica è completa
+    foamTimerRef.current[characterName] = setInterval(() => {
+      updateFoamLevel(characterName, character.loadRate);
+    }, 1000 / gameSpeed);
+  }, rechargeTime);
+};
+
+  // Modify your existing drainStamina function
+  const drainStamina = (characterName) => {
+    setStaminaLevels(prevLevels => {
+      const currentLevel = prevLevels[characterName] || 0;
+      const newLevel = Math.max(0, currentLevel - 0.1);
+
+      // If stamina hits 0 and not already recharging, start recharge
+      if (newLevel === 0 && !isRecharging[characterName]) {
+        startStaminaRecharge(characterName);
       }
-  
-      const newLevel = Math.min(prevLevel + rate, 100);
-  
-      // Aggiorna i dati per il grafico ogni 10 secondi di gioco
-      //if (Math.floor(time) % 10 === 0) {
-        setFoamDataMap(prevDataMap => {
-          const timeInMinutes = time / 60;
-          // Aggiungiamo due punti allo stesso timestamp per creare un salto verticale
-          return {
-            ...prevDataMap,
-            [characterName]: [
-              ...(prevDataMap[characterName] || []),
-              // Primo punto alla stessa altezza dell'ultimo punto (se esiste)
-              { 
-                time: timeInMinutes, 
-                foam: prevDataMap[characterName]?.length > 0 
-                  ? prevDataMap[characterName][prevDataMap[characterName].length - 1].foam 
-                  : 0 
-              },
-              // Secondo punto con il nuovo valore
-              { time: timeInMinutes, foam: newLevel }
-            ]
-          };
-        });
-      //}
-  
-      // Se raggiungiamo il 100%, imposta questo personaggio come vincitore e ferma tutto immediatamente
-      if (newLevel >= 100) {
-        // Imposta il ref sincrono immediatamente
-        hasWinnerRef.current = true;
-        // Imposta lo stato del vincitore (asincrono)
-        setWinner(characterName);
-        // Ferma tutto il gioco immediatamente
-        endGame();
-      }
-  
+
       return {
         ...prevLevels,
         [characterName]: newLevel
       };
     });
   };
+
+  // Modifica completamente la funzione updateFoamLevel
+const updateFoamLevel = (characterName, rate) => {
+  // 1. Controllo immediato: se c'è un vincitore o sta ricaricando, non fare nulla
+  if (hasWinnerRef.current || isRecharging[characterName] || staminaLevels[characterName] <= 0) {
+    return;
+  }
+
+  // 2. Drain stamina
+  drainStamina(characterName);
+
+  // 3. Controllo finale: se la stamina è 0 o sta ricaricando, non aggiornare il progresso
+  if (isRecharging[characterName] || staminaLevels[characterName] <= 0) {
+    return;
+  }
+
+  // 4. Solo se passiamo tutti i controlli, aggiorniamo il progresso
+  setFoamLevels(prevLevels => {
+    const prevLevel = prevLevels[characterName] || 0;
+    if (prevLevel >= 100) return prevLevels;
+
+    const newLevel = Math.min(prevLevel + rate, 100);
+
+    // Aggiorniamo il grafico solo se siamo sicuri di poter procedere
+    setFoamDataMap(prevDataMap => ({
+      ...prevDataMap,
+      [characterName]: [
+        ...(prevDataMap[characterName] || []),
+        { time: time / 60, foam: newLevel }
+      ]
+    }));
+
+    if (newLevel >= 100) {
+      hasWinnerRef.current = true;
+      setWinner(characterName);
+      endGame();
+    }
+
+    return {
+      ...prevLevels,
+      [characterName]: newLevel
+    };
+  });
+};
 
   // Funzione per avviare il gioco
   const startGame = () => {
@@ -484,6 +587,10 @@ const SchiumaParty = () => {
     setEvents([]);
     setCurrentEvent(null);
     setWinner(null);
+    setStaminaLevels({
+      [selectedCharacters[0]]: characters.find(c => c.name === selectedCharacters[0]).stats.stamina * 10,
+      [selectedCharacters[1]]: characters.find(c => c.name === selectedCharacters[1]).stats.stamina * 10
+    });
 
     // Timer per il gioco (incrementa ogni secondo)
     gameTimerRef.current = setInterval(() => {
@@ -510,6 +617,15 @@ const SchiumaParty = () => {
       }, 1000 / gameSpeed);
     });
 
+    // Initialize stroke timers for each character
+    selectedCharacters.forEach(characterName => {
+      const character = characters.find(c => c.name === characterName);
+      const { strokeInterval } = calculateStrokeStats(character);
+
+      strokeTimers[characterName] = setInterval(() => {
+        performStroke(characterName);
+      }, strokeInterval / gameSpeed);
+    });
 
     // Timer per gli eventi (ogni 3 minuti)
     eventTimerRef.current = setInterval(() => {
@@ -530,11 +646,13 @@ const SchiumaParty = () => {
     }
 
     clearInterval(eventTimerRef.current);
+    Object.values(strokeTimers).forEach(timer => clearInterval(timer));
   };
 
   // Funzione per resettare il gioco
   const resetGame = () => {
     endGame();
+    setStaminaLevels({});
     setGameStarted(false);
     setFoamLevels({});
     setFoamDataMap({});
@@ -580,6 +698,71 @@ const SchiumaParty = () => {
       clearInterval(eventTimerRef.current);
     };
   }, []);
+
+  // Add this new function to calculate stroke stats
+  const calculateStrokeStats = (character) => {
+    const strokeInterval = (12 - character.stats.velocità) * 1000; // Convert to milliseconds
+    const strokeGain = 0.4 * character.stats.potenza;
+    return { strokeInterval, strokeGain };
+  };
+
+  // Modifica la funzione performStroke
+const performStroke = (characterName) => {
+  const character = characters.find(c => c.name === characterName);
+  if (!character || hasWinnerRef.current) return;
+
+  // Controlla se il personaggio sta ricaricando la stamina
+  if (isRecharging[characterName]) return;
+
+  // Controlla se ha abbastanza stamina per uno stroke
+  const staminaCost = 10 + character.stats.potenza;
+  if (staminaLevels[characterName] < staminaCost) return;
+
+  setIsStroking(prev => ({ ...prev, [characterName]: true }));
+
+  // Calcola il guadagno dello stroke
+  const { strokeGain } = calculateStrokeStats(character);
+
+  // Consuma la stamina
+  setStaminaLevels(prev => ({
+    ...prev,
+    [characterName]: Math.max(0, prev[characterName] - staminaCost)
+  }));
+
+  // Update foam level
+  setFoamLevels(prevLevels => {
+    const prevLevel = prevLevels[characterName] || 0;
+    const newLevel = Math.min(prevLevel + strokeGain, 100);
+
+    if (newLevel >= 100) {
+      hasWinnerRef.current = true;
+      setWinner(characterName);
+      endGame();
+    }
+
+    return {
+      ...prevLevels,
+      [characterName]: newLevel
+    };
+  });
+
+  // Update graph data
+  setFoamDataMap(prevDataMap => ({
+    ...prevDataMap,
+    [characterName]: [
+      ...(prevDataMap[characterName] || []),
+      { 
+        time: time / 60,
+        foam: Math.min((prevDataMap[characterName]?.slice(-1)[0]?.foam || 0) + strokeGain, 100)
+      }
+    ]
+  }));
+
+  // Reset stroking state after animation
+  setTimeout(() => {
+    setIsStroking(prev => ({ ...prev, [characterName]: false }));
+  }, 500);
+};
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
@@ -659,6 +842,70 @@ const SchiumaParty = () => {
             </div>
           </div>
 
+          <div className="stamina-container">
+            {/* Left Player */}
+            <div className="stamina-player-container">
+              <div className="text-lg font-bold mb-2 text-center">
+                {selectedCharacters[0]}
+              </div>
+              <div className="stamina-bar">
+                <div
+                  className={`stamina-fill ${
+                    isRecharging[selectedCharacters[0]] 
+                      ? 'recharging' 
+                      : staminaLevels[selectedCharacters[0]] < 30 
+                        ? 'low' 
+                        : ''
+                  }`}
+                  style={{
+                    width: `${Math.round(staminaLevels[selectedCharacters[0]] || 0)}%`,
+                    transition: isRecharging[selectedCharacters[0]] 
+                      ? `width ${2000 * (0.1 + (characters.find(c => c.name === selectedCharacters[0]).stats.stamina / 10))}ms linear`
+                      : 'width 0.5s ease-out'
+                  }}
+                >
+                  {isRecharging[selectedCharacters[0]] && (
+                    <span className="recharging-text">RECHARGING</span>
+                  )}
+                </div>
+              </div>
+              <div className="text-sm mt-1 text-center">
+                Stamina: {Math.round(staminaLevels[selectedCharacters[0]] || 0)}%
+              </div>
+            </div>
+
+            {/* Right Player */}
+            <div className="stamina-player-container">
+              <div className="text-lg font-bold mb-2 text-center">
+                {selectedCharacters[1]}
+              </div>
+              <div className="stamina-bar">
+                <div
+                  className={`stamina-fill ${
+                    isRecharging[selectedCharacters[1]] 
+                      ? 'recharging' 
+                      : staminaLevels[selectedCharacters[1]] < 30 
+                        ? 'low' 
+                        : ''
+                  }`}
+                  style={{
+                    width: `${Math.round(staminaLevels[selectedCharacters[1]] || 0)}%`,
+                    transition: isRecharging[selectedCharacters[1]] 
+                      ? `width ${2000 * (0.1 + (characters.find(c => c.name === selectedCharacters[1]).stats.stamina / 10))}ms linear`
+                      : 'width 0.5s ease-out'
+                  }}
+                >
+                  {isRecharging[selectedCharacters[1]] && (
+                    <span className="recharging-text">RECHARGING</span>
+                  )}
+                </div>
+              </div>
+              <div className="text-sm mt-1 text-center">
+                Stamina: {Math.round(staminaLevels[selectedCharacters[1]] || 0)}%
+              </div>
+            </div>
+          </div>
+
           {/* Indicatore evento corrente */}
           {currentEvent && (
             <div className={`mb-4 p-3 rounded-lg bg-${currentEvent.color}-100 border border-${currentEvent.color}-500 transition-all`}>
@@ -673,14 +920,20 @@ const SchiumaParty = () => {
               <div className="text-sm font-semibold mb-1">
                 {characterName}: {(foamLevels[characterName] || 0).toFixed(1)}%
               </div>
-              <div className="w-full h-8 bg-gray-200 rounded-full overflow-hidden">
+              <div className="foam-bar">
                 <div
-                  className={`h-full ${index === 0 ? 'bg-blue-500' : 'bg-green-500'} transition-all duration-500 ease-out`}
-                  style={{ width: `${foamLevels[characterName] || 0}%` }}
+                  className={`foam-fill ${isStroking[characterName] ? 'stroking' : ''} ${
+                    index === 0 ? 'bg-blue-500' : 'bg-green-500'
+                  }`}
+                  style={{
+                    width: `${foamLevels[characterName] || 0}%`
+                  }}
                 ></div>
               </div>
             </div>
           ))}
+
+          
 
           {/* Grafico con due linee */}
           <div className="h-64 mb-4">
@@ -699,16 +952,16 @@ const SchiumaParty = () => {
 
                 {selectedCharacters.map((characterName, index) => (
                   <Line
-                  key={characterName}
-                  type="stepAfter"  // Cambia da "monotone" a "stepAfter"
-                  data={foamDataMap[characterName] || []}
-                  dataKey="foam"
-                  name={characterName}
-                  stroke={index === 0 ? "#0056b3" : "#00b358"}
-                  strokeWidth={2}
-                  dot={false}
-                  isAnimationActive={false}
-                
+                    key={characterName}
+                    type="stepAfter"  // Cambia da "monotone" a "stepAfter"
+                    data={foamDataMap[characterName] || []}
+                    dataKey="foam"
+                    name={characterName}
+                    stroke={index === 0 ? "#0056b3" : "#00b358"}
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={false}
+
                   />
                 ))}
               </LineChart>
